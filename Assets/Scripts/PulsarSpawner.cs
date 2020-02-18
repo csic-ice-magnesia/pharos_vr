@@ -6,6 +6,7 @@ public class PulsarSpawner : MonoBehaviour
 {
     struct Pulsar
     {
+        public string name;
         public Vector3 rightAscension;
         public Vector3 declination;
         public float distance;
@@ -26,6 +27,7 @@ public class PulsarSpawner : MonoBehaviour
 
             Vector3 position = CelestialToCartesian(pulsar.rightAscension, pulsar.declination, pulsar.distance);
             var pulsarInstance = Instantiate(pulsarPrefab, position, Quaternion.identity);
+            pulsarInstance.name = pulsar.name;
             pulsarInstance.SetActive(true);
         }
     }
@@ -69,6 +71,8 @@ public class PulsarSpawner : MonoBehaviour
             Vector3 rightAscension = Vector3.zero;
             Vector3 declination = Vector3.zero;
 
+            string name = (lineData[1]);
+
             string[] raData = (lineData[2].Trim()).Split(':');
 
             int k = 2;
@@ -88,6 +92,7 @@ public class PulsarSpawner : MonoBehaviour
                 --k;
             }
 
+            pulsar.name = name;
             pulsar.rightAscension = rightAscension;
             pulsar.declination = declination;
             pulsar.distance = 1000;
