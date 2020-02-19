@@ -24,8 +24,6 @@ public class RaycastSelector : MonoBehaviour
         {
             Transform objectHit = hit.transform;
             text.text = objectHit.gameObject.name;
-
-            // Do something with the object that was hit by the raycast.
         }
         else
         {

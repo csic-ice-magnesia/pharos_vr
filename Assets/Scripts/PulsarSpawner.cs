@@ -95,7 +95,7 @@ public class PulsarSpawner : MonoBehaviour
             pulsar.name = name;
             pulsar.rightAscension = rightAscension;
             pulsar.declination = declination;
-            pulsar.distance = 1000;
+            pulsar.distance = 128.0f;
 
             pulsars.Add(pulsar);
         }
