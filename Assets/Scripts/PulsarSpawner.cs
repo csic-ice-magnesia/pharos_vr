@@ -14,17 +14,16 @@ public class PulsarSpawner : MonoBehaviour
 
     List<Pulsar> pulsars;
     public GameObject pulsarPrefab;
+    public TextAsset pulsarDatabase;
 
     // Start is called before the first frame update
     void Start()
     {
         pulsars = new List<Pulsar>();
-        ReadDatabase("Assets/Resources/ATNF_short.csv");
+        ReadDatabase();
 
         foreach (Pulsar pulsar in pulsars)
         {
-            Debug.Log("Spawning pulsar");
-
             Vector3 position = CelestialToCartesian(pulsar.rightAscension, pulsar.declination, pulsar.distance);
             var pulsarInstance = Instantiate(pulsarPrefab, position, Quaternion.identity);
             pulsarInstance.name = pulsar.name;
@@ -56,10 +55,9 @@ public class PulsarSpawner : MonoBehaviour
         return cartesian;
     }
 
-    private void ReadDatabase(
-        string filename)
+    private void ReadDatabase()
     {
-        var filedata = System.IO.File.ReadAllText(filename);
+        var filedata = pulsarDatabase.text;
         string[] lines = filedata.Split('\n');
 
         for (int i = 1; i < lines.Length; ++i)

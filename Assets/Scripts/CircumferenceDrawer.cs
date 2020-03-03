@@ -18,14 +18,12 @@ public class CircumferenceDrawer : MonoBehaviour
         // Parallels.
         for (int i = 0; i < parallels.Length; ++i)
         {
-            Debug.Log("Parallel " + parallels[i].ToString());
             GameObject go = new GameObject("Parallel_" + i.ToString());
             go.transform.SetParent(this.transform);
 
             LineRenderer lineRenderer = go.AddComponent<LineRenderer>();
 
             List<Vector3> parallelPoints = ComputeParallel(parallels[i], 128.0f, 64);
-            Debug.Log(parallelPoints.ToArray().Length);
             lineRenderer.positionCount = parallelPoints.Count;
             lineRenderer.SetPositions(parallelPoints.ToArray());
             lineRenderer.material = parallelMaterial;
