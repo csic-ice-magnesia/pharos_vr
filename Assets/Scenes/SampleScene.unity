@@ -734,7 +734,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pulsarPrefab: {fileID: 1722979844224651222, guid: 247bcbca99a3d034688c2a5d95a03166,
     type: 3}
-  pulsarDatabase: {fileID: 4900000, guid: 42ea2acbc9f1ccf4e899edab6fcdf12c, type: 3}
+  pulsarDatabase: {fileID: 4900000, guid: 9ac28cf5e108c594aa7b4ea6e19dfd50, type: 3}
 --- !u!4 &1639443013
 Transform:
   m_ObjectHideFlags: 0

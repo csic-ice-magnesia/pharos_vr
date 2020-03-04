@@ -24,6 +24,12 @@ public class PulsarSpawner : MonoBehaviour
 
         foreach (Pulsar pulsar in pulsars)
         {
+            // Do not plot pulsars for which we don't know the distance.
+            if (pulsar.distance == 0.0f)
+            {
+                continue;
+            }
+
             Vector3 position = CelestialToCartesian(pulsar.rightAscension, pulsar.declination, pulsar.distance);
             var pulsarInstance = Instantiate(pulsarPrefab, position, Quaternion.identity);
             pulsarInstance.name = pulsar.name;
@@ -90,10 +96,13 @@ public class PulsarSpawner : MonoBehaviour
                 --k;
             }
 
+            Debug.Log(lineData[8]);
+            float distance = float.Parse(lineData[8]) * 64.0f;
+
             pulsar.name = name;
             pulsar.rightAscension = rightAscension;
             pulsar.declination = declination;
-            pulsar.distance = 128.0f;
+            pulsar.distance = distance;
 
             pulsars.Add(pulsar);
         }
