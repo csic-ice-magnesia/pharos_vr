@@ -11,6 +11,7 @@ public class CircumferenceDrawer : MonoBehaviour
     public float[] parallels = { -90.0f, -80.0f, -70.0f, -60.0f, -50.0f, -40.0f, -30.0f, -20.0f, -10.0f, 10.0f, 20.0f, 30.0f, 40.0f, 50.0f, 60.0f, 70.0f, 80.0f, 90.0f };
     public float[] meridians = { -90.0f, -80.0f, -70.0f, -60.0f, -50.0f, -40.0f, -30.0f, -20.0f, -10.0f, 0.0f, 10.0f, 20.0f, 30.0f, 40.0f, 50.0f, 60.0f, 70.0f, 80.0f, 90.0f };
 
+    public float radius = 1024.0f;
     public float lineWidth = 0.5f;
 
     void Start()
@@ -23,7 +24,7 @@ public class CircumferenceDrawer : MonoBehaviour
 
             LineRenderer lineRenderer = go.AddComponent<LineRenderer>();
 
-            List<Vector3> parallelPoints = ComputeParallel(parallels[i], 128.0f, 64);
+            List<Vector3> parallelPoints = ComputeParallel(parallels[i], radius, 64);
             lineRenderer.positionCount = parallelPoints.Count;
             lineRenderer.SetPositions(parallelPoints.ToArray());
             lineRenderer.material = parallelMaterial;
@@ -38,7 +39,7 @@ public class CircumferenceDrawer : MonoBehaviour
             GameObject go = new GameObject("Meridian_" + i.ToString());
             go.transform.SetParent(this.transform);
 
-            List<Vector3> meridianPoints = ComputeMeridian(meridians[i], 128.0f, 64);
+            List<Vector3> meridianPoints = ComputeMeridian(meridians[i], radius, 64);
 
             LineRenderer lineRenderer = go.AddComponent<LineRenderer>();
             lineRenderer.positionCount = meridianPoints.Count;
@@ -56,7 +57,7 @@ public class CircumferenceDrawer : MonoBehaviour
 
             LineRenderer lineRenderer = go.AddComponent<LineRenderer>();
 
-            List<Vector3> parallelPoints = ComputeParallel(0.0f, 128.0f, 64);
+            List<Vector3> parallelPoints = ComputeParallel(0.0f, radius, 64);
 
             lineRenderer.positionCount = parallelPoints.Count;
             lineRenderer.SetPositions(parallelPoints.ToArray());
