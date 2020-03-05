@@ -96,7 +96,6 @@ public class PulsarSpawner : MonoBehaviour
                 --k;
             }
 
-            Debug.Log(lineData[8]);
             float distance = float.Parse(lineData[8]) * 64.0f;
 
             pulsar.name = name;
