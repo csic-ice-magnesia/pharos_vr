@@ -17,6 +17,14 @@ public class Flyer : MonoBehaviour
     void Update()
     {
         float axisY = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick).y;
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            axisY = 4.0f;
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            axisY = -4.0f;
+        }
         float axisX = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick).x;
 
         rb.velocity += direction.transform.forward * speed * axisY + direction.transform.right * speed * axisX;

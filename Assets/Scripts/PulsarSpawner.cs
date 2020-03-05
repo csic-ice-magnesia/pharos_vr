@@ -31,7 +31,8 @@ public class PulsarSpawner : MonoBehaviour
             }
 
             Vector3 position = CelestialToCartesian(pulsar.rightAscension, pulsar.declination, pulsar.distance);
-            var pulsarInstance = Instantiate(pulsarPrefab, position, Quaternion.identity);
+            Quaternion rotation = Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f));
+            var pulsarInstance = Instantiate(pulsarPrefab, position, rotation);
             pulsarInstance.name = pulsar.name;
             pulsarInstance.SetActive(true);
         }
@@ -96,7 +97,7 @@ public class PulsarSpawner : MonoBehaviour
                 --k;
             }
 
-            float distance = float.Parse(lineData[8]) * 64.0f;
+            float distance = float.Parse(lineData[8]);
 
             pulsar.name = name;
             pulsar.rightAscension = rightAscension;
