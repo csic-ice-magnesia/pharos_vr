@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class PulsarSpawner : MonoBehaviour
 {
+    private static float cutoffDistance = 256.0f;
+    private static float radius = 1.0f;
+    private static float minimumAlpha = Mathf.Atan(radius / cutoffDistance);
+
     struct Pulsar
     {
         public string name;
@@ -13,6 +17,7 @@ public class PulsarSpawner : MonoBehaviour
     }
 
     List<Pulsar> pulsars;
+    List<GameObject> pulsarInstances;
     public GameObject pulsarPrefab;
     public TextAsset pulsarDatabase;
 
@@ -22,6 +27,7 @@ public class PulsarSpawner : MonoBehaviour
         pulsars = new List<Pulsar>();
         ReadDatabase();
 
+        pulsarInstances = new List<GameObject>();
         foreach (Pulsar pulsar in pulsars)
         {
             // Do not plot pulsars for which we don't know the distance.
@@ -35,13 +41,33 @@ public class PulsarSpawner : MonoBehaviour
             var pulsarInstance = Instantiate(pulsarPrefab, position, rotation);
             pulsarInstance.name = pulsar.name;
             pulsarInstance.SetActive(true);
+            pulsarInstances.Add(pulsarInstance);
         }
+
+        float[] cullingDistances = new float[32];
+        cullingDistances[9] = 10.0f;
+        Camera.main.layerCullDistances = cullingDistances;
+        Camera.main.layerCullSpherical = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        foreach (GameObject p in pulsarInstances)
+        {
+            float distanceToCamera = Vector3.Distance(p.transform.position, Camera.main.transform.position);
+            float alpha = Mathf.Atan(radius / distanceToCamera);
+            float alphaCoefficient = minimumAlpha / alpha;
+
+            if (alphaCoefficient > 1.0f)
+            {
+                p.transform.localScale = new Vector3(radius * alphaCoefficient, radius * alphaCoefficient, radius * alphaCoefficient);
+            }
+            else
+            {
+                p.transform.localScale = Vector3.one;
+            }
+        }
     }
 
     private Vector3 CelestialToCartesian(
@@ -97,7 +123,7 @@ public class PulsarSpawner : MonoBehaviour
                 --k;
             }
 
-            float distance = float.Parse(lineData[8]);
+            float distance = float.Parse(lineData[8]) * 128.0f;
 
             pulsar.name = name;
             pulsar.rightAscension = rightAscension;
