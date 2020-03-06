@@ -26,10 +26,15 @@ public class UpdateHUD : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            Transform objectHit = hit.transform;
-            pulsarName.text = objectHit.gameObject.name;
+            if (hit.transform.gameObject.GetComponentInChildren<Pulsar>())
+            {
+                Pulsar p = hit.transform.gameObject.GetComponent<Pulsar>();
+                Transform objectHit = hit.transform;
 
-            pulsarDescription.text = "Distance: " + Mathf.Round(Vector3.Distance(player.transform.position, objectHit.position)).ToString() + " [kpc]";
+                pulsarName.text = objectHit.gameObject.name;
+                pulsarDescription.text = "Distance: " + Mathf.Round(Vector3.Distance(player.transform.position, objectHit.position)).ToString() + " [kpc]\n";
+                pulsarDescription.text += "Frequency: " + Mathf.Round(p.f0) + " [Hz]";
+            }
         }
         else
         {

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1722979844224651210}
   - component: {fileID: 7413174609632279316}
+  - component: {fileID: 8332948588447263129}
   m_Layer: 0
   m_Name: Pulsar
   m_TagString: Untagged
@@ -45,6 +46,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9183ea79c866e61449b07f7083635250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rightAscension: {x: 0, y: 0, z: 0}
+  declination: {x: 0, y: 0, z: 0}
+  rotationAxis: {x: 0, y: 0, z: 0}
+  distance: 0
+  f0: 0
+--- !u!135 &8332948588447263129
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722979844224651222}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2205631601227424346
 GameObject:
   m_ObjectHideFlags: 0
@@ -56,7 +75,6 @@ GameObject:
   - component: {fileID: 6868221212893732598}
   - component: {fileID: 62484623764870300}
   - component: {fileID: 8246844661285257168}
-  - component: {fileID: 8530485154503634025}
   m_Layer: 0
   m_Name: Star
   m_TagString: Untagged
@@ -124,19 +142,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &8530485154503634025
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2205631601227424346}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &5566551610096965746
 PrefabInstance:
   m_ObjectHideFlags: 0

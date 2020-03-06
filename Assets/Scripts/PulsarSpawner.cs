@@ -8,15 +8,17 @@ public class PulsarSpawner : MonoBehaviour
     private static float radius = 1.0f;
     private static float minimumAlpha = Mathf.Atan(radius / cutoffDistance);
 
-    struct Pulsar
+    struct PulsarData
     {
         public string name;
         public Vector3 rightAscension;
         public Vector3 declination;
+        public Vector3 rotationAxis;
         public float distance;
+        public float f0;
     }
 
-    List<Pulsar> pulsars;
+    List<PulsarData> pulsars;
     List<GameObject> pulsarInstances;
     public GameObject pulsarPrefab;
     public TextAsset pulsarDatabase;
@@ -24,11 +26,11 @@ public class PulsarSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pulsars = new List<Pulsar>();
+        pulsars = new List<PulsarData>();
         ReadDatabase();
 
         pulsarInstances = new List<GameObject>();
-        foreach (Pulsar pulsar in pulsars)
+        foreach (PulsarData pulsar in pulsars)
         {
             // Do not plot pulsars for which we don't know the distance.
             if (pulsar.distance == 0.0f)
@@ -39,8 +41,18 @@ public class PulsarSpawner : MonoBehaviour
             Vector3 position = CelestialToCartesian(pulsar.rightAscension, pulsar.declination, pulsar.distance);
             Quaternion rotation = Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f));
             var pulsarInstance = Instantiate(pulsarPrefab, position, rotation);
+
             pulsarInstance.name = pulsar.name;
+
+            Pulsar pulsarInstancePulsar = pulsarInstance.GetComponent<Pulsar>();
+            pulsarInstancePulsar.rightAscension = pulsar.rightAscension;
+            pulsarInstancePulsar.declination = pulsar.declination;
+            pulsarInstancePulsar.f0 = pulsar.f0;
+            pulsarInstancePulsar.rotationAxis = pulsar.rotationAxis;
+            pulsarInstancePulsar.distance = pulsar.distance;
+
             pulsarInstance.SetActive(true);
+
             pulsarInstances.Add(pulsarInstance);
         }
 
@@ -53,8 +65,12 @@ public class PulsarSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (GameObject p in pulsarInstances)
+        int i = 0;
+        foreach (GameObject pi in pulsarInstances)
         {
+            Pulsar p = pi.GetComponent<Pulsar>();
+
+            // Keep constant pulsar size beyond the specified distance by scaling it.
             float distanceToCamera = Vector3.Distance(p.transform.position, Camera.main.transform.position);
             float alpha = Mathf.Atan(radius / distanceToCamera);
             float alphaCoefficient = minimumAlpha / alpha;
@@ -67,6 +83,9 @@ public class PulsarSpawner : MonoBehaviour
             {
                 p.transform.localScale = Vector3.one;
             }
+
+            // Rotate pulsar according to its frequency.
+            p.transform.Rotate(p.rotationAxis, Mathf.Rad2Deg * (2.0f * Mathf.PI * p.f0) * 0.0000000001f);
         }
     }
 
@@ -97,7 +116,7 @@ public class PulsarSpawner : MonoBehaviour
         {
             string[] lineData = (lines[i].Trim()).Split(';');
 
-            Pulsar pulsar = new Pulsar();
+            PulsarData pulsar;
 
             Vector3 rightAscension = Vector3.zero;
             Vector3 declination = Vector3.zero;
@@ -123,12 +142,16 @@ public class PulsarSpawner : MonoBehaviour
                 --k;
             }
 
-            float distance = float.Parse(lineData[8]) * 128.0f;
+            float f0 = float.Parse(lineData[8]);
+            Debug.Log("Frequency " + f0.ToString());
+            float distance = float.Parse(lineData[10]);
 
             pulsar.name = name;
             pulsar.rightAscension = rightAscension;
             pulsar.declination = declination;
+            pulsar.rotationAxis = new Vector3(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f));
             pulsar.distance = distance;
+            pulsar.f0 = f0;
 
             pulsars.Add(pulsar);
         }
