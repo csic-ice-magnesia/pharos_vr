@@ -14,6 +14,7 @@ public class Pulsar : MonoBehaviour
     void Start()
     {
         enabled = false;
+        this.transform.GetChild(0).gameObject.SetActive(false);
     }
 
     // Update is called once per frame

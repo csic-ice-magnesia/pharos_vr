@@ -38,7 +38,7 @@ public class PulsarSpawner : MonoBehaviour
                 continue;
             }
 
-            Vector3 position = CelestialToCartesian(pulsar.rightAscension, pulsar.declination, pulsar.distance);
+            Vector3 position = CelestialToCartesian(pulsar.rightAscension, pulsar.declination, pulsar.distance * 128.0f);
             Quaternion rotation = Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f));
             var pulsarInstance = Instantiate(pulsarPrefab, position, rotation);
 
@@ -57,7 +57,7 @@ public class PulsarSpawner : MonoBehaviour
         }
 
         float[] cullingDistances = new float[32];
-        cullingDistances[9] = 10.0f;
+        cullingDistances[9] = 256.0f;
         Camera.main.layerCullDistances = cullingDistances;
         Camera.main.layerCullSpherical = true;
     }
@@ -85,7 +85,7 @@ public class PulsarSpawner : MonoBehaviour
             }
 
             // Rotate pulsar according to its frequency.
-            p.transform.Rotate(p.rotationAxis, Mathf.Rad2Deg * (2.0f * Mathf.PI * p.f0) * 0.0000000001f);
+            p.transform.Rotate(p.rotationAxis, Mathf.Rad2Deg * (2.0f * Mathf.PI * p.f0 * 0.00001f));
         }
     }
 
@@ -143,7 +143,6 @@ public class PulsarSpawner : MonoBehaviour
             }
 
             float f0 = float.Parse(lineData[8]);
-            Debug.Log("Frequency " + f0.ToString());
             float distance = float.Parse(lineData[10]);
 
             pulsar.name = name;
