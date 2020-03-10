@@ -8,6 +8,8 @@ public class PulsarSpawner : MonoBehaviour
     private static float radius = 1.0f;
     private static float minimumAlpha = Mathf.Atan(radius / cutoffDistance);
 
+    private Vector3 jetScale;
+
     struct PulsarData
     {
         public string name;
@@ -26,6 +28,8 @@ public class PulsarSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        jetScale = pulsarPrefab.transform.GetChild(0).localScale;
+
         pulsars = new List<PulsarData>();
         ReadDatabase();
 
@@ -65,11 +69,13 @@ public class PulsarSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int i = 0;
+        
         foreach (GameObject pi in pulsarInstances)
         {
-            Pulsar p = pi.GetComponent<Pulsar>();
+            
+            //Pulsar p = pi.GetComponent<Pulsar>();
 
+            /*
             // Keep constant pulsar size beyond the specified distance by scaling it.
             float distanceToCamera = Vector3.Distance(p.transform.position, Camera.main.transform.position);
             float alpha = Mathf.Atan(radius / distanceToCamera);
@@ -84,12 +90,16 @@ public class PulsarSpawner : MonoBehaviour
                 p.transform.localScale = Vector3.one;
             }
 
+            p.transform.GetChild(0).localScale = jetScale * Mathf.Clamp(16.0f / distanceToCamera, 0.0f, 1.0f);
+            */
+
             // Rotate pulsar according to its frequency.
-            p.transform.Rotate(p.rotationAxis, Mathf.Rad2Deg * (2.0f * Mathf.PI * p.f0 * 0.00001f));
+            //p.transform.Rotate(p.rotationAxis, Mathf.Rad2Deg * (2.0f * Mathf.PI * p.f0 * 0.00001f));
         }
+        
     }
 
-    private Vector3 CelestialToCartesian(
+        private Vector3 CelestialToCartesian(
         Vector3 rightAscension,
         Vector3 declination,
         double distance)

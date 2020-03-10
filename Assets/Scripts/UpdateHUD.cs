@@ -39,6 +39,8 @@ public class UpdateHUD : MonoBehaviour
                 previousHit = hit.transform.gameObject;
 
                 Pulsar p = hit.transform.gameObject.GetComponent<Pulsar>();
+                p.transform.Rotate(p.rotationAxis, Mathf.Rad2Deg * (2.0f * Mathf.PI * p.f0 * 0.00001f));
+
                 Transform objectHit = hit.transform;
 
                 // Enable the pulsar jet.
