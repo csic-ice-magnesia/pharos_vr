@@ -9,6 +9,7 @@ public class Pulsar : MonoBehaviour
     public Vector3 rotationAxis;
     public float distance;
     public float f0;
+    public float bsurf;
 
     // Start is called before the first frame update
     void Start()

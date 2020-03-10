@@ -18,6 +18,7 @@ public class PulsarSpawner : MonoBehaviour
         public Vector3 rotationAxis;
         public float distance;
         public float f0;
+        public float bsurf;
     }
 
     List<PulsarData> pulsars;
@@ -25,9 +26,31 @@ public class PulsarSpawner : MonoBehaviour
     public GameObject pulsarPrefab;
     public TextAsset pulsarDatabase;
 
+    Gradient mGradient;
+    GradientColorKey[] mColorKey;
+    GradientAlphaKey[] mAlphaKey;
+
     // Start is called before the first frame update
     void Start()
     {
+        mGradient = new Gradient();
+
+        // Populate the color keys at the relative time 0 and 1 (0 and 100%)
+        mColorKey = new GradientColorKey[2];
+        mColorKey[0].color = Color.green;
+        mColorKey[0].time = 0.0f;
+        mColorKey[1].color = Color.blue;
+        mColorKey[1].time = 1.0f;
+
+        // Populate the alpha  keys at relative time 0 and 1  (0 and 100%)
+        mAlphaKey = new GradientAlphaKey[2];
+        mAlphaKey[0].alpha = 1.0f;
+        mAlphaKey[0].time = 0.0f;
+        mAlphaKey[1].alpha = 0.0f;
+        mAlphaKey[1].time = 1.0f;
+
+        mGradient.SetKeys(mColorKey, mAlphaKey);
+
         jetScale = pulsarPrefab.transform.GetChild(0).localScale;
 
         pulsars = new List<PulsarData>();
@@ -54,11 +77,57 @@ public class PulsarSpawner : MonoBehaviour
             pulsarInstancePulsar.f0 = pulsar.f0;
             pulsarInstancePulsar.rotationAxis = pulsar.rotationAxis;
             pulsarInstancePulsar.distance = pulsar.distance;
+            pulsarInstancePulsar.bsurf = pulsar.bsurf;
 
             pulsarInstance.SetActive(true);
 
             pulsarInstances.Add(pulsarInstance);
         }
+
+        // Set pulsar material color depending on the surface magnetic field
+        // intensity.
+
+        float minMagneticIntensity = float.MaxValue;
+        float maxMagneticIntensity = float.MinValue;
+
+        foreach (PulsarData pulsar in pulsars)
+        {
+            if (pulsar.bsurf == 0.0f)
+            {
+                continue;
+            }
+
+            minMagneticIntensity = Mathf.Min(minMagneticIntensity, pulsar.bsurf);
+            maxMagneticIntensity = Mathf.Max(maxMagneticIntensity, pulsar.bsurf);
+        }
+
+        minMagneticIntensity = Mathf.Log10(minMagneticIntensity);
+        maxMagneticIntensity = Mathf.Log10(maxMagneticIntensity);
+
+        foreach (var p in pulsarInstances)
+        {
+            float gradientPosition = (Mathf.Log10(p.GetComponent<Pulsar>().bsurf) - minMagneticIntensity) / (maxMagneticIntensity - minMagneticIntensity);
+            var color = mGradient.Evaluate(gradientPosition);
+
+            Debug.Log("Bsurf = " + p.GetComponent<Pulsar>().bsurf.ToString());
+            Debug.Log("Gradient position " + gradientPosition.ToString());
+
+            if (p.GetComponent<Pulsar>().bsurf == 0.0f)
+            {
+                color = Color.white;
+            }
+
+            p.transform.GetChild(1).GetComponent<Renderer>().material.SetColor(
+                "_Color",
+                color
+            );
+        }
+
+        Debug.Log("minMag " + minMagneticIntensity.ToString());
+        Debug.Log("maxMag " + maxMagneticIntensity.ToString());
+
+        // Set up culling distances for the different pulsar layers with
+        // spherical rather than planar distance calculation.
 
         float[] cullingDistances = new float[32];
         cullingDistances[9] = 256.0f;
@@ -99,7 +168,7 @@ public class PulsarSpawner : MonoBehaviour
         
     }
 
-        private Vector3 CelestialToCartesian(
+    private Vector3 CelestialToCartesian(
         Vector3 rightAscension,
         Vector3 declination,
         double distance)
@@ -142,7 +211,6 @@ public class PulsarSpawner : MonoBehaviour
                 --k;
             }
 
-
             string[] decData = (lineData[3].Trim()).Split(':');
 
             k = 2;
@@ -154,6 +222,7 @@ public class PulsarSpawner : MonoBehaviour
 
             float f0 = float.Parse(lineData[8]);
             float distance = float.Parse(lineData[10]);
+            float bsurf = float.Parse(lineData[13]);
 
             pulsar.name = name;
             pulsar.rightAscension = rightAscension;
@@ -161,6 +230,7 @@ public class PulsarSpawner : MonoBehaviour
             pulsar.rotationAxis = new Vector3(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f));
             pulsar.distance = distance;
             pulsar.f0 = f0;
+            pulsar.bsurf = bsurf;
 
             pulsars.Add(pulsar);
         }
