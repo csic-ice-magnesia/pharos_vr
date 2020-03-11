@@ -9,7 +9,6 @@ public class PulsarSpawner : MonoBehaviour
     private static float minimumAlpha = Mathf.Atan(radius / cutoffDistance);
 
     private Vector3 jetScale;
-
     struct PulsarData
     {
         public string name;
@@ -25,6 +24,7 @@ public class PulsarSpawner : MonoBehaviour
     List<GameObject> pulsarInstances;
     public GameObject pulsarPrefab;
     public TextAsset pulsarDatabase;
+    public Material orbitMaterial;
 
     Gradient mGradient;
     GradientColorKey[] mColorKey;
@@ -57,6 +57,7 @@ public class PulsarSpawner : MonoBehaviour
         ReadDatabase();
 
         pulsarInstances = new List<GameObject>();
+
         foreach (PulsarData pulsar in pulsars)
         {
             // Do not plot pulsars for which we don't know the distance.
@@ -67,7 +68,6 @@ public class PulsarSpawner : MonoBehaviour
 
             Vector3 position = CelestialToCartesian(pulsar.rightAscension, pulsar.declination, pulsar.distance * 128.0f);
             Quaternion rotation = Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f));
-            //Quaternion rotation = Quaternion.identity;
             var pulsarInstance = Instantiate(pulsarPrefab, position, rotation);
 
             pulsarInstance.name = pulsar.name;
@@ -81,10 +81,16 @@ public class PulsarSpawner : MonoBehaviour
             pulsarInstancePulsar.distance = pulsar.distance;
             pulsarInstancePulsar.bsurf = pulsar.bsurf;
 
-            // Setup for orbiting.
-            pulsarInstance.transform.GetChild(0).transform.localPosition = new Vector3(0.0f, 0.0f, 4.0f);
-            pulsarInstance.transform.GetChild(1).transform.localPosition = new Vector3(0.0f, 0.0f, -4.0f);
+            // Orbit setup.
+            float orbitRadius = Random.Range(2.0f, 8.0f);
+
+            pulsarInstance.transform.GetChild(0).transform.localPosition = new Vector3(0.0f, 0.0f, orbitRadius);
+            pulsarInstance.transform.GetChild(1).transform.localPosition = new Vector3(0.0f, 0.0f, -1.0f * orbitRadius);
             pulsarInstance.transform.GetChild(2).transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+            pulsarInstance.transform.GetChild(3).transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+
+            // Add line renderer to orbit subcomponent and customize.
+            CreateOrbit(pulsarInstance.transform.GetChild(2).gameObject, orbitRadius);
 
             // Displace sphere collider to fit the pulsar only.
             pulsarInstance.GetComponent<SphereCollider>().center = pulsarInstance.transform.GetChild(0).transform.localPosition;
@@ -169,6 +175,36 @@ public class PulsarSpawner : MonoBehaviour
             // Rotate pulsar according to its frequency.
             //p.transform.Rotate(p.rotationAxis, Mathf.Rad2Deg * (2.0f * Mathf.PI * p.f0 * 0.00001f));
         }*/
+    }
+
+    void CreateOrbit(GameObject center, float radius)
+    {
+        LineRenderer orbitRenderer = center.AddComponent<LineRenderer>();
+
+        float thetaScale = 0.01f;
+        float sizeValue = (2.0f * Mathf.PI) / thetaScale;
+        int size = (int)sizeValue;
+        size++;
+
+        orbitRenderer.useWorldSpace = false;
+        orbitRenderer.startWidth = 0.05f;
+        orbitRenderer.endWidth = 0.05f;
+        orbitRenderer.material = orbitMaterial;
+        orbitRenderer.material.color = new Color(0.75f, 0.75f, 0.75f, 0.5f);
+        orbitRenderer.positionCount = size;
+
+        Vector3 pos;
+        float theta = 0f;
+        for (int i = 0; i < size; i++)
+        {
+            theta += (2.0f * Mathf.PI * thetaScale);
+            float x = radius * Mathf.Cos(theta);
+            float y = radius * Mathf.Sin(theta);
+            x += center.transform.localPosition.x;
+            y += center.transform.localPosition.y;
+            pos = new Vector3(x, y, 0);
+            orbitRenderer.SetPosition(i, pos);
+        }
     }
 
     private Vector3 CelestialToCartesian(
