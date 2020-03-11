@@ -23,13 +23,6 @@ public class UpdateHUD : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Disable the pulsar jet if we stopped casting at the pulsar.
-        if (previousHit != null)
-        {
-            previousHit.transform.GetChild(0).gameObject.SetActive(false);
-            previousHit = null;
-        }
-
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
@@ -39,12 +32,23 @@ public class UpdateHUD : MonoBehaviour
                 previousHit = hit.transform.gameObject;
 
                 Pulsar p = hit.transform.gameObject.GetComponent<Pulsar>();
-                p.transform.Rotate(p.rotationAxis, Mathf.Rad2Deg * (2.0f * Mathf.PI * p.f0 * 0.00001f));
-
                 Transform objectHit = hit.transform;
 
+                // Rotate pulsar + companion to create feeling of orbit.
+                hit.transform.Rotate(new Vector3(0.0f, 0.5f, 0.0f), Space.Self);
+
+                // Rotate pulsar around itself.
+                hit.transform.GetChild(0).Rotate(p.rotationAxis, Mathf.Rad2Deg * (2.0f * Mathf.PI * p.f0 * 0.00001f));
+
                 // Enable the pulsar jet.
-                hit.transform.GetChild(0).gameObject.SetActive(true);
+                hit.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+
+                // Enable the companion.
+                hit.transform.GetChild(1).gameObject.SetActive(true);
+
+                // Visualize orbital.
+                hit.transform.GetChild(2).gameObject.SetActive(true);
+                hit.transform.GetChild(3).gameObject.SetActive(true);
 
                 // Update HUD information.
                 pulsarName.text = objectHit.gameObject.name;
@@ -55,6 +59,20 @@ public class UpdateHUD : MonoBehaviour
         }
         else
         {
+            // Disable the pulsar jet if we stopped casting at the pulsar.
+            if (previousHit != null)
+            {
+                // Disable the pulsar jet.
+                previousHit.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+                // Disable the companion.
+                previousHit.transform.GetChild(1).gameObject.SetActive(false);
+                // Disable orbital visualization.
+                previousHit.transform.GetChild(2).gameObject.SetActive(false);
+                previousHit.transform.GetChild(3).gameObject.SetActive(false);
+
+                previousHit = null;
+            }
+
             pulsarName.text = "";
             pulsarDescription.text = "";
         }

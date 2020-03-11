@@ -67,10 +67,12 @@ public class PulsarSpawner : MonoBehaviour
 
             Vector3 position = CelestialToCartesian(pulsar.rightAscension, pulsar.declination, pulsar.distance * 128.0f);
             Quaternion rotation = Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f));
+            //Quaternion rotation = Quaternion.identity;
             var pulsarInstance = Instantiate(pulsarPrefab, position, rotation);
 
             pulsarInstance.name = pulsar.name;
 
+            // Fill pulsar details in the object.
             Pulsar pulsarInstancePulsar = pulsarInstance.GetComponent<Pulsar>();
             pulsarInstancePulsar.rightAscension = pulsar.rightAscension;
             pulsarInstancePulsar.declination = pulsar.declination;
@@ -78,6 +80,14 @@ public class PulsarSpawner : MonoBehaviour
             pulsarInstancePulsar.rotationAxis = pulsar.rotationAxis;
             pulsarInstancePulsar.distance = pulsar.distance;
             pulsarInstancePulsar.bsurf = pulsar.bsurf;
+
+            // Setup for orbiting.
+            pulsarInstance.transform.GetChild(0).transform.localPosition = new Vector3(0.0f, 0.0f, 4.0f);
+            pulsarInstance.transform.GetChild(1).transform.localPosition = new Vector3(0.0f, 0.0f, -4.0f);
+            pulsarInstance.transform.GetChild(2).transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+
+            // Displace sphere collider to fit the pulsar only.
+            pulsarInstance.GetComponent<SphereCollider>().center = pulsarInstance.transform.GetChild(0).transform.localPosition;
 
             pulsarInstance.SetActive(true);
 
@@ -106,25 +116,20 @@ public class PulsarSpawner : MonoBehaviour
 
         foreach (var p in pulsarInstances)
         {
-            float gradientPosition = (Mathf.Log10(p.GetComponent<Pulsar>().bsurf) - minMagneticIntensity) / (maxMagneticIntensity - minMagneticIntensity);
-            var color = mGradient.Evaluate(gradientPosition);
-
-            Debug.Log("Bsurf = " + p.GetComponent<Pulsar>().bsurf.ToString());
-            Debug.Log("Gradient position " + gradientPosition.ToString());
+            float magneticIntensity = Mathf.Log10(p.GetComponent<Pulsar>().bsurf);
+            float gradientPosition = (magneticIntensity - minMagneticIntensity) / (maxMagneticIntensity - minMagneticIntensity);
+            Color color = mGradient.Evaluate(gradientPosition);
 
             if (p.GetComponent<Pulsar>().bsurf == 0.0f)
             {
                 color = Color.white;
             }
 
-            p.transform.GetChild(1).GetComponent<Renderer>().material.SetColor(
+            p.transform.GetChild(0).GetChild(1).GetComponent<Renderer>().material.SetColor(
                 "_Color",
                 color
             );
         }
-
-        Debug.Log("minMag " + minMagneticIntensity.ToString());
-        Debug.Log("maxMag " + maxMagneticIntensity.ToString());
 
         // Set up culling distances for the different pulsar layers with
         // spherical rather than planar distance calculation.
@@ -139,12 +144,11 @@ public class PulsarSpawner : MonoBehaviour
     void Update()
     {
         
-        foreach (GameObject pi in pulsarInstances)
+        /*foreach (GameObject pi in pulsarInstances)
         {
             
             //Pulsar p = pi.GetComponent<Pulsar>();
 
-            /*
             // Keep constant pulsar size beyond the specified distance by scaling it.
             float distanceToCamera = Vector3.Distance(p.transform.position, Camera.main.transform.position);
             float alpha = Mathf.Atan(radius / distanceToCamera);
@@ -160,12 +164,11 @@ public class PulsarSpawner : MonoBehaviour
             }
 
             p.transform.GetChild(0).localScale = jetScale * Mathf.Clamp(16.0f / distanceToCamera, 0.0f, 1.0f);
-            */
+            
 
             // Rotate pulsar according to its frequency.
             //p.transform.Rotate(p.rotationAxis, Mathf.Rad2Deg * (2.0f * Mathf.PI * p.f0 * 0.00001f));
-        }
-        
+        }*/
     }
 
     private Vector3 CelestialToCartesian(
