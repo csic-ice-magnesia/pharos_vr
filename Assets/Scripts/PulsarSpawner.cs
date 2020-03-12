@@ -25,6 +25,7 @@ public class PulsarSpawner : MonoBehaviour
     public GameObject pulsarPrefab;
     public TextAsset pulsarDatabase;
     public Material orbitMaterial;
+    public GameObject mTagger;
 
     Gradient mGradient;
     GradientColorKey[] mColorKey;
@@ -144,6 +145,18 @@ public class PulsarSpawner : MonoBehaviour
         cullingDistances[9] = 256.0f;
         Camera.main.layerCullDistances = cullingDistances;
         Camera.main.layerCullSpherical = true;
+
+        // Set tags.
+        Tagger tagger = mTagger.GetComponent<Tagger>();
+
+        for (int i = 0; i < 100; i++)
+        {
+            int pos = Random.Range(0, pulsars.Count);
+            PulsarData pd = pulsars[pos];
+            tagger.AddTag(pd.name, CelestialToCartesian(pd.rightAscension, pd.declination, pd.distance));
+        }
+
+        tagger.CreateTags();
     }
 
     // Update is called once per frame
