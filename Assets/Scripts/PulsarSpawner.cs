@@ -146,14 +146,15 @@ public class PulsarSpawner : MonoBehaviour
         Camera.main.layerCullDistances = cullingDistances;
         Camera.main.layerCullSpherical = true;
 
-        // Set tags.
+        // Add tags to certain random pulsars and create them.
+
         Tagger tagger = mTagger.GetComponent<Tagger>();
 
         for (int i = 0; i < 100; i++)
         {
             int pos = Random.Range(0, pulsars.Count);
             PulsarData pd = pulsars[pos];
-            tagger.AddTag(pd.name, CelestialToCartesian(pd.rightAscension, pd.declination, pd.distance));
+            tagger.AddTag(pd.name, CelestialToCartesian(pd.rightAscension, pd.declination, pd.distance * 128.0f));
         }
 
         tagger.CreateTags();
