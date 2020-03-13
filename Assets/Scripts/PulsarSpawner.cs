@@ -70,31 +70,23 @@ public class PulsarSpawner : MonoBehaviour
             Vector3 position = CelestialToCartesian(pulsar.rightAscension, pulsar.declination, pulsar.distance * 128.0f);
             Quaternion rotation = Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f));
             var pulsarInstance = Instantiate(pulsarPrefab, position, rotation);
+            Pulsar p = pulsarInstance.GetComponent<Pulsar>();
 
             pulsarInstance.name = pulsar.name;
 
             // Fill pulsar details in the object.
             Pulsar pulsarInstancePulsar = pulsarInstance.GetComponent<Pulsar>();
-            pulsarInstancePulsar.rightAscension = pulsar.rightAscension;
-            pulsarInstancePulsar.declination = pulsar.declination;
-            pulsarInstancePulsar.f0 = pulsar.f0;
-            pulsarInstancePulsar.rotationAxis = pulsar.rotationAxis;
-            pulsarInstancePulsar.distance = pulsar.distance;
-            pulsarInstancePulsar.bsurf = pulsar.bsurf;
+            pulsarInstancePulsar.mRightAscension = pulsar.rightAscension;
+            pulsarInstancePulsar.mDeclination = pulsar.declination;
+            pulsarInstancePulsar.mFrequency = pulsar.f0;
+            pulsarInstancePulsar.mRotationAxis = pulsar.rotationAxis;
+            pulsarInstancePulsar.mDistance = pulsar.distance;
+            pulsarInstancePulsar.mSurfaceMagneticIntensity = pulsar.bsurf;
 
             // Orbit setup.
             float orbitRadius = Random.Range(2.0f, 8.0f);
-
-            pulsarInstance.transform.GetChild(0).transform.localPosition = new Vector3(0.0f, 0.0f, orbitRadius);
-            pulsarInstance.transform.GetChild(1).transform.localPosition = new Vector3(0.0f, 0.0f, -1.0f * orbitRadius);
-            pulsarInstance.transform.GetChild(2).transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-            pulsarInstance.transform.GetChild(3).transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-
-            // Add line renderer to orbit subcomponent and customize.
-            CreateOrbit(pulsarInstance.transform.GetChild(2).gameObject, orbitRadius);
-
-            // Displace sphere collider to fit the pulsar only.
-            pulsarInstance.GetComponent<SphereCollider>().center = pulsarInstance.transform.GetChild(0).transform.localPosition;
+            p.SetOrbit(orbitRadius);
+            p.CreateOrbitLine(orbitMaterial);
 
             pulsarInstance.SetActive(true);
 
@@ -123,11 +115,11 @@ public class PulsarSpawner : MonoBehaviour
 
         foreach (var p in pulsarInstances)
         {
-            float magneticIntensity = Mathf.Log10(p.GetComponent<Pulsar>().bsurf);
+            float magneticIntensity = Mathf.Log10(p.GetComponent<Pulsar>().mSurfaceMagneticIntensity);
             float gradientPosition = (magneticIntensity - minMagneticIntensity) / (maxMagneticIntensity - minMagneticIntensity);
             Color color = mGradient.Evaluate(gradientPosition);
 
-            if (p.GetComponent<Pulsar>().bsurf == 0.0f)
+            if (p.GetComponent<Pulsar>().mSurfaceMagneticIntensity == 0.0f)
             {
                 color = Color.white;
             }
@@ -191,35 +183,7 @@ public class PulsarSpawner : MonoBehaviour
         }*/
     }
 
-    void CreateOrbit(GameObject center, float radius)
-    {
-        LineRenderer orbitRenderer = center.AddComponent<LineRenderer>();
-
-        float thetaScale = 0.01f;
-        float sizeValue = (2.0f * Mathf.PI) / thetaScale;
-        int size = (int)sizeValue;
-        size++;
-
-        orbitRenderer.useWorldSpace = false;
-        orbitRenderer.startWidth = 0.05f;
-        orbitRenderer.endWidth = 0.05f;
-        orbitRenderer.material = orbitMaterial;
-        orbitRenderer.material.color = new Color(0.75f, 0.75f, 0.75f, 0.5f);
-        orbitRenderer.positionCount = size;
-
-        Vector3 pos;
-        float theta = 0f;
-        for (int i = 0; i < size; i++)
-        {
-            theta += (2.0f * Mathf.PI * thetaScale);
-            float x = radius * Mathf.Cos(theta);
-            float y = radius * Mathf.Sin(theta);
-            x += center.transform.localPosition.x;
-            y += center.transform.localPosition.y;
-            pos = new Vector3(x, y, 0);
-            orbitRenderer.SetPosition(i, pos);
-        }
-    }
+    
 
     private Vector3 CelestialToCartesian(
         Vector3 rightAscension,
