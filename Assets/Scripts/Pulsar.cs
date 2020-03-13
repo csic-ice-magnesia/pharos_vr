@@ -25,18 +25,85 @@ public class Pulsar : MonoBehaviour
     public float mFrequency;
     public float mSurfaceMagneticIntensity;
     public float mOrbitalRadius;
+    public PulsarType mType;
+
+    public Material mOrbitalMaterial;
 
     // Start is called before the first frame update.
     void Start()
     {
         // Astrophysical jet is disabled by default for effiency.
-        this.SetJetState(false);
+        SetJetState(false);
         // Disable the companion for the moment.
-        this.SetCompanionState(false);
+        SetCompanionState(false);
         // Orbital is disabled for efficiency and clutter.
-        this.SetOrbitVisuals(false);
+        SetOrbitVisuals(false);
         // Disable updating for efficiency.
         enabled = false;
+    }
+
+    public void Create()
+    {
+        // Randomly pick a type for the pulsar.
+        PickType();
+
+        // Companion setup.
+        if (mType == PulsarType.ISOLATED)
+        {
+            transform.GetChild(COMPANION_CHILD_ID).transform.localScale *= 0.0f;
+        }
+        else if (mType == PulsarType.NS_HM)
+        {
+            float companionScaleMultiplier = Random.Range(1.0f, 4.0f);
+            transform.GetChild(COMPANION_CHILD_ID).transform.localScale *= companionScaleMultiplier;
+        }
+
+        // Orbit setup.
+        if (mType == PulsarType.ISOLATED)
+        {
+            mOrbitalRadius = 0.0f;
+            SetOrbit();
+        }
+        else
+        {
+            mOrbitalRadius = Random.Range(2.0f, 8.0f);
+            SetOrbit();
+            CreateOrbitLine();
+        }
+    }
+
+    /// <summary>
+    /// Enables the pulsar jet, the companion, and the orbital visualization.
+    /// </summary>
+    public void Activate()
+    {
+        // Enable the pulsar jet.
+        SetJetState(true);
+        // Enable the companion.
+        SetCompanionState(true);
+        // Visualize orbital.
+        SetOrbitVisuals(true);
+    }
+
+    /// <summary>
+    /// Disables the pulsar jet, the companion, and the orbital visualization.
+    /// </summary>
+    public void Deactivate()
+    {
+        // Disable the pulsar jet.
+        SetJetState(false);
+        // Disable the companion.
+        SetCompanionState(false);
+        // Disable orbital visualization.
+        SetOrbitVisuals(false);
+    }
+
+    /// <summary>
+    /// Assigns this pulsar a random type of pulsar with equal probability.
+    /// </summary>
+    public void PickType()
+    {
+        mType = (PulsarType)Random.Range(0, System.Enum.GetNames(typeof(PulsarType)).Length);
     }
 
     /// <summary>
@@ -47,9 +114,12 @@ public class Pulsar : MonoBehaviour
     public void OrbitStep()
     {
         // Rotate pulsar + companion to create feeling of orbit.
-        this.transform.Rotate(ORBITAL_SPEED, Space.Self);
+        if (mType != PulsarType.ISOLATED)
+        {
+            transform.Rotate(ORBITAL_SPEED, Space.Self);
+        }
         // Rotate just the pulsar around its axis.
-        this.transform.GetChild(PULSAR_CHILD_ID).Rotate(
+        transform.GetChild(PULSAR_CHILD_ID).Rotate(
             mRotationAxis,
             Mathf.Rad2Deg * (2.0f * Mathf.PI * mFrequency * ROTATION_MULTILPIER)
         );
@@ -64,18 +134,16 @@ public class Pulsar : MonoBehaviour
     /// 
     /// </summary>
     /// <param name="radius">The radius of the orbit in [kpc]</param>
-    public void SetOrbit(float radius)
+    public void SetOrbit()
     {
-        mOrbitalRadius = radius;
-
         // Move pulsar, companion, and orbit center to the appropriate positions.
-        this.transform.GetChild(PULSAR_CHILD_ID).transform.localPosition = new Vector3(0.0f, 0.0f, radius);
-        this.transform.GetChild(COMPANION_CHILD_ID).transform.localPosition = new Vector3(0.0f, 0.0f, -1.0f * radius);
-        this.transform.GetChild(ORBIT_LINE_CHILD_ID).transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-        this.transform.GetChild(ORBIT_CENTER_CHILD_ID).transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+        transform.GetChild(PULSAR_CHILD_ID).transform.localPosition = new Vector3(0.0f, 0.0f, mOrbitalRadius);
+        transform.GetChild(COMPANION_CHILD_ID).transform.localPosition = new Vector3(0.0f, 0.0f, -1.0f * mOrbitalRadius);
+        transform.GetChild(ORBIT_LINE_CHILD_ID).transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+        transform.GetChild(ORBIT_CENTER_CHILD_ID).transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
 
         // Displace global sphere collider to fit the pulsar only.
-        this.GetComponent<SphereCollider>().center = this.transform.GetChild(PULSAR_CHILD_ID).transform.localPosition;
+        GetComponent<SphereCollider>().center = transform.GetChild(PULSAR_CHILD_ID).transform.localPosition;
     }
 
     /// <summary>
@@ -84,9 +152,9 @@ public class Pulsar : MonoBehaviour
     /// a circle of predefined width and color around the XY plane.
     /// </summary>
     /// <param name="orbitMaterial">The material for the line to render.</param>
-    public void CreateOrbitLine(Material orbitMaterial)
+    public void CreateOrbitLine()
     {
-        LineRenderer orbitRenderer = this.transform.GetChild(ORBIT_LINE_CHILD_ID).gameObject.AddComponent<LineRenderer>();
+        LineRenderer orbitRenderer = transform.GetChild(ORBIT_LINE_CHILD_ID).gameObject.AddComponent<LineRenderer>();
 
         float thetaScale = 0.01f;
         float sizeValue = (2.0f * Mathf.PI) / thetaScale;
@@ -96,7 +164,7 @@ public class Pulsar : MonoBehaviour
         orbitRenderer.useWorldSpace = false;
         orbitRenderer.startWidth = 0.05f;
         orbitRenderer.endWidth = 0.05f;
-        orbitRenderer.material = orbitMaterial;
+        orbitRenderer.material = mOrbitalMaterial;
         orbitRenderer.material.color = new Color(0.75f, 0.75f, 0.75f, 0.5f);
         orbitRenderer.positionCount = size;
 
@@ -107,8 +175,8 @@ public class Pulsar : MonoBehaviour
             theta += (2.0f * Mathf.PI * thetaScale);
             float x = mOrbitalRadius * Mathf.Cos(theta);
             float y = mOrbitalRadius * Mathf.Sin(theta);
-            x += this.transform.GetChild(ORBIT_LINE_CHILD_ID).gameObject.transform.localPosition.x;
-            y += this.transform.GetChild(ORBIT_LINE_CHILD_ID).gameObject.transform.localPosition.y;
+            x += transform.GetChild(ORBIT_LINE_CHILD_ID).gameObject.transform.localPosition.x;
+            y += transform.GetChild(ORBIT_LINE_CHILD_ID).gameObject.transform.localPosition.y;
             pos = new Vector3(x, y, 0);
             orbitRenderer.SetPosition(i, pos);
         }
@@ -120,8 +188,8 @@ public class Pulsar : MonoBehaviour
     /// <param name="state">Whether to enable or not the orbital objects.</param>
     public void SetOrbitVisuals(bool state)
     {
-        this.transform.GetChild(ORBIT_LINE_CHILD_ID).gameObject.SetActive(state);
-        this.transform.GetChild(ORBIT_CENTER_CHILD_ID).gameObject.SetActive(state);
+        transform.GetChild(ORBIT_LINE_CHILD_ID).gameObject.SetActive(state);
+        transform.GetChild(ORBIT_CENTER_CHILD_ID).gameObject.SetActive(state);
     }
 
     /// <summary>
@@ -130,7 +198,7 @@ public class Pulsar : MonoBehaviour
     /// <param name="state">Whether to enable or not the companion.</param>
     public void SetCompanionState(bool state)
     {
-        this.transform.GetChild(COMPANION_CHILD_ID).gameObject.SetActive(state);
+        transform.GetChild(COMPANION_CHILD_ID).gameObject.SetActive(state);
     }
 
     /// <summary>
@@ -139,6 +207,6 @@ public class Pulsar : MonoBehaviour
     /// <param name="state">Whether or not to enable the jet.</param>
     public void SetJetState(bool state)
     {
-        this.transform.GetChild(PULSAR_CHILD_ID).GetChild(0).gameObject.SetActive(state);
+        transform.GetChild(PULSAR_CHILD_ID).GetChild(0).gameObject.SetActive(state);
     }
 }

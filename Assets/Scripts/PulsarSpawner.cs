@@ -83,10 +83,7 @@ public class PulsarSpawner : MonoBehaviour
             pulsarInstancePulsar.mDistance = pulsar.distance;
             pulsarInstancePulsar.mSurfaceMagneticIntensity = pulsar.bsurf;
 
-            // Orbit setup.
-            float orbitRadius = Random.Range(2.0f, 8.0f);
-            p.SetOrbit(orbitRadius);
-            p.CreateOrbitLine(orbitMaterial);
+            p.Create();
 
             pulsarInstance.SetActive(true);
 
