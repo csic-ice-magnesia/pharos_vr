@@ -1419,12 +1419,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9183ea79c866e61449b07f7083635250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightAscension: {x: 0, y: 0, z: 0}
-  declination: {x: 0, y: 0, z: 0}
-  rotationAxis: {x: 0, y: 0, z: 0}
-  distance: 0
-  f0: 0
-  bsurf: 0
+  mRightAscension: {x: 0, y: 0, z: 0}
+  mDeclination: {x: 0, y: 0, z: 0}
+  mRotationAxis: {x: 0, y: 0, z: 0}
+  mDistance: 0
+  mFrequency: 0
+  mSurfaceMagneticIntensity: 0
+  mOrbitalRadius: 0
+  mType: 0
+  mOrbitalMaterial: {fileID: 2100000, guid: 4225c219c999e184495d28fe291256ac, type: 2}
 --- !u!135 &525985543695322856
 SphereCollider:
   m_ObjectHideFlags: 0

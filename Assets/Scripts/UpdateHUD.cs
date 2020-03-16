@@ -23,7 +23,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// 
+/// Component to handle all the HUD information updating and also
+/// to activate and deactivate pulsars on look.
 /// </summary>
 public class UpdateHUD : MonoBehaviour
 {

@@ -1,35 +1,83 @@
-﻿using System.Collections;
+﻿// Copyright(C) 2020 MAGNESIA (ICE-CSIC)
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.If not, see<https://www.gnu.org/licenses/>.
+//
+// Contributors to this file:
+//  * Alberto Garcia Garcia (garciagarcia @ ice.csic.es)
+//
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Component to represent a pulsar.
+/// </summary>
 public class Pulsar : MonoBehaviour
 {
+    // Index of the pulsar child in the hierarchy.
     const int PULSAR_CHILD_ID = 0;
+    // Index of the companion child in the hierarchy.
     const int COMPANION_CHILD_ID = 1;
+    // Index of the orbit line child in the hierarchy.
     const int ORBIT_LINE_CHILD_ID = 2;
+    // Index of the orbit center child in the hierarchy.
     const int ORBIT_CENTER_CHILD_ID = 3;
+    // Orbital velocity for the pulsar and its companion.
     readonly Vector3 ORBITAL_SPEED = new Vector3( 0.0f, 0.5f, 0.0f);
+    // Self-rotation frequency multiplier for visibility.
     const float ROTATION_MULTILPIER = 0.00001f;
 
+    // Kinds of available pulsars.
     public enum PulsarType
     {
+        // Neutron star - neutron star.
         NS_NS,
+        // Neutron star - high mass.
         NS_HM,
+        // Isolated.
         ISOLATED
     };
 
+    // Right ascension in [h:m:s].
     public Vector3 mRightAscension;
+    // Declination in [h:m:s].
     public Vector3 mDeclination;
+    // Direction of the self-rotation axis.
     public Vector3 mRotationAxis;
+    // Distance to Earth in [kpc].
     public float mDistance;
+    // Rotation frequency in [Hz].
     public float mFrequency;
+    // Surface magnetic field intensity in [G].
     public float mSurfaceMagneticIntensity;
+    // Orbit radius if binary in [kpc].
     public float mOrbitalRadius;
+    // Type of pulsar.
     public PulsarType mType;
-
+    // Material to draw the orbit line with.
     public Material mOrbitalMaterial;
 
-    // Start is called before the first frame update.
+    /// <summary>
+    /// Start is called before the first frame update.
+    /// 
+    /// For efficiency reasons, the jet, companion, and the orbit are disabled
+    /// by default until we look at the pulsar. Only the sphere representing
+    /// the star is visible.
+    /// 
+    /// Furthermore, the per-frame update of each pulsar is disabled.
+    /// </summary>
     void Start()
     {
         // Astrophysical jet is disabled by default for effiency.
@@ -42,12 +90,18 @@ public class Pulsar : MonoBehaviour
         enabled = false;
     }
 
+    /// <summary>
+    /// Create the pulsar.
+    /// 
+    /// First pick a random type among the possible ones, setup the companion,
+    /// and setup the orbit if there is such companion.
+    /// </summary>
     public void Create()
     {
-        // Randomly pick a type for the pulsar.
+        // Randomly pick a type for the pulsar
         PickType();
 
-        // Companion setup.
+        // Companion setup
         if (mType == PulsarType.ISOLATED)
         {
             transform.GetChild(COMPANION_CHILD_ID).transform.localScale *= 0.0f;
@@ -58,7 +112,7 @@ public class Pulsar : MonoBehaviour
             transform.GetChild(COMPANION_CHILD_ID).transform.localScale *= companionScaleMultiplier;
         }
 
-        // Orbit setup.
+        // Orbit setup
         if (mType == PulsarType.ISOLATED)
         {
             mOrbitalRadius = 0.0f;
@@ -119,7 +173,8 @@ public class Pulsar : MonoBehaviour
             transform.Rotate(ORBITAL_SPEED, Space.Self);
         }
         // Rotate just the pulsar around its axis.
-        transform.GetChild(PULSAR_CHILD_ID).Rotate(
+        transform.GetChild(PULSAR_CHILD_ID).Rotate
+        (
             mRotationAxis,
             Mathf.Rad2Deg * (2.0f * Mathf.PI * mFrequency * ROTATION_MULTILPIER)
         );
@@ -142,7 +197,7 @@ public class Pulsar : MonoBehaviour
         transform.GetChild(ORBIT_LINE_CHILD_ID).transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
         transform.GetChild(ORBIT_CENTER_CHILD_ID).transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
 
-        // Displace global sphere collider to fit the pulsar only.
+        // Displace global sphere collider to fit the pulsar sphere only.
         GetComponent<SphereCollider>().center = transform.GetChild(PULSAR_CHILD_ID).transform.localPosition;
     }
 

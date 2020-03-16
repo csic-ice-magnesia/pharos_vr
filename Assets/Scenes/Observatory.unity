@@ -310,10 +310,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32486dccf36d5164482663bb47b14ab6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1582953479}
-  velocityText: {fileID: 1887658335}
-  pulsarName: {fileID: 1654441978}
-  pulsarDescription: {fileID: 1943697431}
+  mPlayer: {fileID: 1582953479}
+  mVelocityText: {fileID: 1887658335}
+  mPulsarNameText: {fileID: 1654441978}
+  mPulsarDescriptionText: {fileID: 1943697431}
 --- !u!1 &321521242
 GameObject:
   m_ObjectHideFlags: 0
