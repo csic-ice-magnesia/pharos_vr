@@ -17,8 +17,6 @@
 //  * Alberto Garcia Garcia (garciagarcia @ ice.csic.es)
 //
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
