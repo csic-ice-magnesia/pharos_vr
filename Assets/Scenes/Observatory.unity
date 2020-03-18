@@ -1608,10 +1608,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a863e3c6bf7d14695909bb4ed16f6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pulsarPrefab: {fileID: 6840834262219162632, guid: 8f832ea8a8e3e0b449cbfd89112a62c3,
+  mPulsarPrefab: {fileID: 6840834262219162632, guid: 8f832ea8a8e3e0b449cbfd89112a62c3,
     type: 3}
-  pulsarDatabase: {fileID: 4900000, guid: 95f5dcf4cc786a74dbcf26b888645a36, type: 3}
-  orbitMaterial: {fileID: 2100000, guid: 4225c219c999e184495d28fe291256ac, type: 2}
+  mPulsarDatabase: {fileID: 4900000, guid: 95f5dcf4cc786a74dbcf26b888645a36, type: 3}
   mTagger: {fileID: 924315946}
 --- !u!4 &1639443013
 Transform:
