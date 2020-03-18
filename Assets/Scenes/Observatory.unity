@@ -654,10 +654,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ddd3a629736d643a35d7e606f728fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallelMaterial: {fileID: 2100000, guid: 4225c219c999e184495d28fe291256ac, type: 2}
-  meridianMaterial: {fileID: 2100000, guid: 4225c219c999e184495d28fe291256ac, type: 2}
-  equatorMaterial: {fileID: 2100000, guid: 4225c219c999e184495d28fe291256ac, type: 2}
-  parallels:
+  mParallelMaterial: {fileID: 2100000, guid: 4225c219c999e184495d28fe291256ac, type: 2}
+  mMeridianMaterial: {fileID: 2100000, guid: 4225c219c999e184495d28fe291256ac, type: 2}
+  mEquatorMaterial: {fileID: 2100000, guid: b901ef11b29581f4d9d6e0fad5d8d4e0, type: 2}
+  mParallels:
   - -90
   - -80
   - -70
@@ -676,7 +676,7 @@ MonoBehaviour:
   - 70
   - 80
   - 90
-  meridians:
+  mMeridians:
   - -90
   - -80
   - -70
@@ -696,8 +696,8 @@ MonoBehaviour:
   - 70
   - 80
   - 90
-  radius: 2048
-  lineWidth: 2
+  mSphereRadius: 512
+  mLineWidth: 0.5
 --- !u!4 &675943899
 Transform:
   m_ObjectHideFlags: 0
