@@ -31,6 +31,8 @@ public class PulsarSpawner : MonoBehaviour
     public TextAsset mPulsarDatabase;
     // Object responsible for 3D tagging the pulsars in the scene.
     public GameObject mTagger;
+    // Number of random tags to spawn.
+    public int mNumTags;
 
     // Distance beyond which the pulsars' apparent size will be kept constant.
     private const float CUTOFF_DISTANCE = 256.0f;
@@ -207,11 +209,19 @@ public class PulsarSpawner : MonoBehaviour
 
         // Add tags to certain random pulsars and create them.
         {
+            HashSet<int> tagIds = new HashSet<int>();
             Tagger tagger = mTagger.GetComponent<Tagger>();
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < mNumTags; i++)
             {
-                int p = Random.Range(0, mPulsars.Count);
+                int p;
+
+                do
+                {
+                    p = Random.Range(0, mPulsars.Count);
+                }
+                while (!tagIds.Add(p));
+
                 PulsarData pd = mPulsars[p];
                 tagger.AddTag(
                     pd.name,
