@@ -102,6 +102,7 @@ public class Pulsar : MonoBehaviour
         // Companion setup
         if (mType == PulsarType.ISOLATED)
         {
+            transform.GetChild(PULSAR_CHILD_ID).GetChild(0).GetChild(0).gameObject.SetActive(false);
             transform.GetChild(COMPANION_CHILD_ID).transform.localScale *= 0.0f;
         }
         else if (mType == PulsarType.NS_HM)
