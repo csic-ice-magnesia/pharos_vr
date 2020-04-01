@@ -980,6 +980,8 @@ MonoBehaviour:
   mCameraToLookAt: {fileID: 1582953482}
   mTagObjectPrefab: {fileID: 7496715676552407190, guid: 74bd9acd598b1e442b77d62c10c52b95,
     type: 3}
+  mNearDistance: 32
+  mFarDistance: 64
 --- !u!114 &924315948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1056,7 +1058,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 468.5, y: 296.5}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 937, y: 593}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &1040962572 stripped
