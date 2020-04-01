@@ -54,6 +54,8 @@ public class CelestialSphere : MonoBehaviour
     public float mSphereRadius = 1024.0f;
     // Width for the parallels/meridians lines.
     public float mLineWidth = 0.5f;
+    // Opacity for the celestial sphere.
+    public float mOpacity = 0.010f;
 
     /// <summary>
     /// Start is called before the first frame update.
@@ -79,7 +81,7 @@ public class CelestialSphere : MonoBehaviour
             lineRenderer.positionCount = parallelPoints.Count;
             lineRenderer.SetPositions(parallelPoints.ToArray());
             lineRenderer.material = mParallelMaterial;
-            lineRenderer.material.color = new Color(0.25f, 0.28f, 0.58f, 1.0f);
+            lineRenderer.material.color = new Color(0.25f, 0.28f, 0.58f, mOpacity);
             lineRenderer.startWidth = mLineWidth;
             lineRenderer.endWidth = mLineWidth;
         }
@@ -96,7 +98,7 @@ public class CelestialSphere : MonoBehaviour
             lineRenderer.positionCount = meridianPoints.Count;
             lineRenderer.SetPositions(meridianPoints.ToArray());
             lineRenderer.material = mMeridianMaterial;
-            lineRenderer.material.color = new Color(0.25f, 0.28f, 0.58f, 1.0f);
+            lineRenderer.material.color = new Color(0.25f, 0.28f, 0.58f, mOpacity);
             lineRenderer.startWidth = mLineWidth;
             lineRenderer.endWidth = mLineWidth;
         }
@@ -113,7 +115,7 @@ public class CelestialSphere : MonoBehaviour
             lineRenderer.positionCount = parallelPoints.Count;
             lineRenderer.SetPositions(parallelPoints.ToArray());
             lineRenderer.material = mParallelMaterial;
-            lineRenderer.material.color = new Color(0.24f, 0.50f, 0.57f, 1.0f);
+            lineRenderer.material.color = new Color(0.24f, 0.50f, 0.57f, mOpacity);
             lineRenderer.startWidth = mLineWidth * 1.25f;
             lineRenderer.endWidth = mLineWidth * 1.25f;
         }

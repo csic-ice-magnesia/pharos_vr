@@ -698,6 +698,7 @@ MonoBehaviour:
   - 90
   mSphereRadius: 512
   mLineWidth: 0.5
+  mOpacity: 0.25
 --- !u!4 &675943899
 Transform:
   m_ObjectHideFlags: 0
@@ -2530,7 +2531,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &2049673891
 AudioSource:
   m_ObjectHideFlags: 0
