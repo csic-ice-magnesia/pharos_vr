@@ -15,11 +15,14 @@ public class Tagger : MonoBehaviour
     public float mFarDistance = 64.0f;
 
     // Data struct to hold tag information.
-    struct Tag
+    [System.Serializable]
+    public struct Tag
     {
         public string name;
         public Vector3 position;
     };
+    //
+    public List<Tag> mDefaultTags;
     // List of tag data.
     private List<Tag> mTags;
     // List of tag instances.
@@ -31,6 +34,7 @@ public class Tagger : MonoBehaviour
     void Start()
     {
         mTags = new List<Tag>();
+        mTags.AddRange(mDefaultTags);
         mTagInstances = new List<GameObject>();
     }
 
