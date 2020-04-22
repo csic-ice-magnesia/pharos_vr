@@ -41,6 +41,9 @@ public class UpdateHUD : MonoBehaviour
     // The text reference where the pulsar description will be displayed.
     public Text mPulsarDescriptionText;
 
+    public Text mRightAscensionText;
+    public Text mDeclinationText;
+
     /// <summary>
     /// Start is called before the first frame update.
     /// 
@@ -114,6 +117,9 @@ public class UpdateHUD : MonoBehaviour
 
             mPulsarDescriptionText.text += "Type: " + 
                 p.mType.ToString();
+
+            mRightAscensionText.text = p.mRightAscension.x + ":" + p.mRightAscension.y + ":" + p.mRightAscension.z;
+            mDeclinationText.text = p.mDeclination.x + ":" + p.mDeclination.y + ":" + p.mDeclination.z;
         }
         // If the ray no longer hits any pulsar, we disable it and
         // clear all the information in the HUD.
@@ -122,14 +128,16 @@ public class UpdateHUD : MonoBehaviour
             // Disable the pulsar if we are no longer looking at it.
             if (mPreviousHit != null)
             {
-                Pulsar p = mPreviousHit.transform.gameObject.GetComponent<Pulsar>();
-                p.Deactivate();
-                mPreviousHit = null;
+                //Pulsar p = mPreviousHit.transform.gameObject.GetComponent<Pulsar>();
+                //p.Deactivate();
+                //mPreviousHit = null;
             }
 
             // Also clear the HUD information about it.
             mPulsarNameText.text = "";
             mPulsarDescriptionText.text = "";
+            mRightAscensionText.text = "???";
+            mDeclinationText.text = "???";
         }
 
         // Whatever happens, update the velocity display every frame.

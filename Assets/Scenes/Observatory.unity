@@ -320,6 +320,8 @@ MonoBehaviour:
   mVelocityText: {fileID: 1887658335}
   mPulsarNameText: {fileID: 1654441978}
   mPulsarDescriptionText: {fileID: 1943697431}
+  mRightAscensionText: {fileID: 2066708499}
+  mDeclinationText: {fileID: 1249806213}
 --- !u!1 &321521242
 GameObject:
   m_ObjectHideFlags: 0
@@ -1406,6 +1408,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1986283065}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1249806213 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114805678704653578, guid: 949cac64006073b489556d076d0c3696,
+    type: 3}
+  m_PrefabInstance: {fileID: 1986283065}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249806210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1249806215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2829,7 +2843,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!82 &2049673891
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2983,6 +2997,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1986283065}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2066708499 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114964131127091620, guid: 949cac64006073b489556d076d0c3696,
+    type: 3}
+  m_PrefabInstance: {fileID: 1986283065}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066708496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2066708501
 MonoBehaviour:
   m_ObjectHideFlags: 0
