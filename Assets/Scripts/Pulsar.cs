@@ -66,6 +66,8 @@ public class Pulsar : MonoBehaviour
     public PulsarType mType;
     // Material to draw the orbit line with.
     public Material mOrbitalMaterial;
+    // Companion temperature color.
+    public float mCompanionTemperature;
 
     /// <summary>
     /// Start is called before the first frame update.
@@ -98,6 +100,16 @@ public class Pulsar : MonoBehaviour
     {
         // Randomly pick a type for the pulsar
         PickType();
+
+        // Randomize companion temperature.
+        mCompanionTemperature = Random.Range(1000.0f, 10000.0f);
+        Vector3 companionColor = ColorTemperatureToRGB(mCompanionTemperature) / 255.0f;
+        transform.GetChild(COMPANION_CHILD_ID).GetComponent<MeshRenderer>().material.color = new Color(
+            companionColor.x,
+            companionColor.y,
+            companionColor.z,
+            1.0f
+        );
 
         // Companion setup
         if (mType == PulsarType.ISOLATED)
@@ -262,5 +274,46 @@ public class Pulsar : MonoBehaviour
     public void SetJetState(bool state)
     {
         transform.GetChild(PULSAR_CHILD_ID).GetChild(0).gameObject.SetActive(state);
+    }
+
+    public Vector3 ColorTemperatureToRGB(double kelvin)
+    {
+        double temp = kelvin / 100.0;
+        double red, green, blue;
+
+        if (temp <= 66.0)
+        {
+            red = 255.0;
+            green = temp;
+            green = 99.4708025861 * Mathf.Log((float)green) - 161.1195681661;
+
+            if (temp <= 19.0f)
+            {
+                blue = 0.0f;
+            }
+            else
+            {
+                blue = temp - 10.0;
+                blue = 138.5177312231 * Mathf.Log((float)blue) - 305.0447927307;
+            }
+        }
+        else
+        {
+            red = temp - 60.0;
+            red = 329.698727446 * Mathf.Pow((float)red, -0.1332047592f);
+
+            green = temp - 60.0;
+            green = 288.1221695283 * Mathf.Pow((float)green, -0.0755148492f);
+
+            blue = 255.0;
+        }
+
+
+        Vector3 color;
+        color.x = Mathf.Clamp((float)red, 0.0f, 255.0f);
+        color.y = Mathf.Clamp((float)green, 0.0f, 255.0f);
+        color.z = Mathf.Clamp((float)blue, 0.0f, 255.0f);
+
+        return color;
     }
 }

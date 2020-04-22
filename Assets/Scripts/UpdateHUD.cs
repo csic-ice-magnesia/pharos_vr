@@ -116,10 +116,15 @@ public class UpdateHUD : MonoBehaviour
                 p.mSurfaceMagneticIntensity.ToString() + " [G]\n";
 
             mPulsarDescriptionText.text += "Type: " + 
-                p.mType.ToString();
+                p.mType.ToString() + "\n";
 
-            mRightAscensionText.text = p.mRightAscension.x + ":" + p.mRightAscension.y + ":" + p.mRightAscension.z;
-            mDeclinationText.text = p.mDeclination.x + ":" + p.mDeclination.y + ":" + p.mDeclination.z;
+            mPulsarDescriptionText.text += "Companion Temperature: " +
+                p.mCompanionTemperature.ToString() + " [K]";
+
+            mRightAscensionText.text = p.mRightAscension.x + ":" + 
+                p.mRightAscension.y + ":" + p.mRightAscension.z;
+            mDeclinationText.text = p.mDeclination.x + ":" +
+                p.mDeclination.y + ":" + p.mDeclination.z;
         }
         // If the ray no longer hits any pulsar, we disable it and
         // clear all the information in the HUD.
@@ -128,9 +133,9 @@ public class UpdateHUD : MonoBehaviour
             // Disable the pulsar if we are no longer looking at it.
             if (mPreviousHit != null)
             {
-                //Pulsar p = mPreviousHit.transform.gameObject.GetComponent<Pulsar>();
-                //p.Deactivate();
-                //mPreviousHit = null;
+                Pulsar p = mPreviousHit.transform.gameObject.GetComponent<Pulsar>();
+                p.Deactivate();
+                mPreviousHit = null;
             }
 
             // Also clear the HUD information about it.
