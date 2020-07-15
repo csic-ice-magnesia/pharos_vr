@@ -118,8 +118,11 @@ public class UpdateHUD : MonoBehaviour
             mPulsarDescriptionText.text += "Type: " + 
                 p.mType.ToString() + "\n";
 
-            mPulsarDescriptionText.text += "Companion Temperature: " +
-                p.mCompanionTemperature.ToString() + " [K]";
+            if (p.mType != Pulsar.PulsarType.ISOLATED)
+            {
+                mPulsarDescriptionText.text += "Companion Temperature: " +
+                    p.mCompanionTemperature.ToString() + " [K]";
+            }
 
             mRightAscensionText.text = p.mRightAscension.x + ":" + 
                 p.mRightAscension.y + ":" + p.mRightAscension.z;
