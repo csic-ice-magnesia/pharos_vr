@@ -11,7 +11,7 @@ If you want to develop the code here you can find the requirements, how to clone
 ### Requirements
 
 * Git.
-* Unity 2019.1.4 (f1).
+* Unity 2019.2.14 (f12).
 * Unity Android Build Support and Android SDK & NDK tools (for Oculus Quest deployment).
 * Oculus Quest for deployment.
 
