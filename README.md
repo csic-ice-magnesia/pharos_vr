@@ -1,5 +1,7 @@
 # PHAROS VR Observatory
 
+This program was developed for the PHAROS Cost Action (www.pharos.ice.csic.es), it is Open Access and inline with COST regulations. 
+
 ## Quick Deployment to Oculus Quest VR Device
 
 Install [SideQuest](https://sidequestvr.com/#/download) and fetch the PHAROS VR APK in the releases section of this repository. Connect your Oculus Quest device via USB 3.0 and use SideQuest to load the APK file into Quest, it should appear in your library. To do so, you will need to set your Oculus Quest device in Developer Mode, refer to a later section in this README (Connecting and Setting Up Oculus Quest for Development).
